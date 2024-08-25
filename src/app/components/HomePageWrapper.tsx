@@ -1,12 +1,18 @@
+import { FC, ReactNode } from 'react';
 import { Box, Flex } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { Header } from '@/src/app/components/Header';
 
-export const HomePageWrapper = ({ children } : { children: ReactNode}) => {
-  return (
-    <Box minH='100vh' width='100vw' overflow='hidden'>
-      <Flex as='main' overflow='hidden'>
-        {children}
-      </Flex>
-    </Box>
-  );
-};
+interface HomePageWrapperProps {
+  children: ReactNode;
+}
+
+export const HomePageWrapper: FC<HomePageWrapperProps> = ({
+  children,
+}) => (
+  <Box minH='100vh' width='100vw' overflow='hidden'>
+    <Header />
+    <Flex as='main' overflow='hidden'>
+      {children}
+    </Flex>
+  </Box>
+);
