@@ -12,7 +12,7 @@ import { mode } from '@chakra-ui/theme-tools';
 // Context
 import { SearchContextProvider } from './contexts/searchContext';
 
-const { Input, Button, Divider, Heading, Link, Skeleton, Text, Hide } = chakraTheme.components;
+const { Input, Button, Divider, Heading, Link, Skeleton } = chakraTheme.components;
 
 const theme = extendBaseTheme({
   config: {
@@ -26,8 +26,6 @@ const theme = extendBaseTheme({
     Heading,
     Link,
     Skeleton,
-    Text,
-    Hide,
   },
   styles: {
     global: (props: StyleFunctionProps) => ({

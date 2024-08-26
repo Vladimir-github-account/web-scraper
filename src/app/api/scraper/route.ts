@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
 		const closeDateTextSelector = await page.locator('#body_x_tabc_rfp_ext_prxrfp_ext_x_txtRfpEndDateEst').waitHandle() ;
 
-		const closeDate = await closeDateTextSelector?.evaluate((el: HTMLInputElement) => el.value);
+		const closeDate = await closeDateTextSelector?.evaluate(el => (el as HTMLInputElement).value);
 
 		const summaryTextSelector = await page.locator('#body_x_tabc_rfp_ext_prxrfp_ext_x_lblSummary').waitHandle();
 
@@ -42,21 +42,16 @@ export async function GET(req: NextRequest) {
 
 		const mainCategoryTextSelector = await page.locator('#body_x_tabc_rfp_ext_prxrfp_ext_x_txtFamLabel').waitHandle();
 
-		const mainCategory = await mainCategoryTextSelector?.evaluate((el: HTMLInputElement) => el.value);
+		const mainCategory = await mainCategoryTextSelector?.evaluate(el => (el as HTMLInputElement).value);
 
 		const typeTextSelector = await page.locator('div[data-selector="body_x_tabc_rfp_ext_prxrfp_ext_x_selRfptypeCode"] > .text').waitHandle();
 
 		const type = await typeTextSelector?.evaluate(el => el.textContent);
 
 		const attachments = await page.evaluate(() => {
-			const attachmentsLinks = document.querySelectorAll('#body_x_tabc_rfp_ext_prxrfp_ext_x_phcDoc_content .iv-download-file');
-			let results = [];
+			const attachmentsLinks =  Array.from(document.querySelectorAll('#body_x_tabc_rfp_ext_prxrfp_ext_x_phcDoc_content .iv-download-file'));
 
-			for (const link of attachmentsLinks) {
-				results = [...results, 'https://emma.maryland.gov' + link.getAttribute('href')];
-			}
-
-			return results;
+			return attachmentsLinks.map(el => 'https://emma.maryland.gov' + el.getAttribute('href'));
 		}, { timeout: 60000 });
 
 		await browser.close();

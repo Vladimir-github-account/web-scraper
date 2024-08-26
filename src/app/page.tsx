@@ -35,9 +35,9 @@ export default function Home() {
     try {
       const { data } = await scraper(text);
       setData(data);
-    } catch (err: AxiosError) {
+    } catch (err: unknown) {
       setData(null);
-      setError(err.status === 404 ? 'Solicitation not found for specified id.' : 'Oops, something went wrong...');
+      setError((err as AxiosError).status === 404 ? 'Solicitation not found for specified id.' : 'Oops, something went wrong...');
       console.error(err);
     }
     setLoading(false);
@@ -90,7 +90,9 @@ export default function Home() {
               <Text fontWeight='medium'>Due / Close Date (EST):</Text>
               <Skeleton w={180} height='16px' />
             </Flex>
-            <Text fontWeight='medium'>Summary:</Text>
+            <Text fontWeight='medium'>Summary</Text>
+            <SkeletonText w={650} mt={1} noOfLines={4} spacing='4' skeletonHeight='3' />
+            <Text fontWeight='medium'>Attachments</Text>
             <SkeletonText w={650} mt={1} noOfLines={4} spacing='4' skeletonHeight='3' />
           </Stack>
         }
