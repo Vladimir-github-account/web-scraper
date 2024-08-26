@@ -107,7 +107,7 @@ export default function Home() {
             <Text fontWeight='medium'>Summary</Text>
             <Text maxW={1024}>{data?.summary}</Text>
             <Text fontWeight='medium'>Attachments</Text>
-            {data?.attachments.map(attachment => (
+            {data?.attachments?.map(attachment => (
               <Link
                 target='_blank'
                 href={attachment}
@@ -116,6 +116,9 @@ export default function Home() {
                 {attachment}
               </Link>
             ))}
+            {data?.attachments && data.attachments.length === 0 &&
+              <Text fontWeight='medium'>No attachments</Text>
+            }
           </Stack>
         }
       </Flex>

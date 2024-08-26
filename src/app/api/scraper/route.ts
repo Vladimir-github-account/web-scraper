@@ -1,13 +1,23 @@
 import { type NextRequest } from 'next/server';
-import puppeteer, { TimeoutError } from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer, { TimeoutError } from 'puppeteer-core';
+
+export const maxDuration = 60;
 
 export async function GET(req: NextRequest) {
-	try {
-		const searchParams = req.nextUrl.searchParams;
-		const id = searchParams.get('id');
-		const browser = await puppeteer.launch();
-		const page = await browser.newPage();
+	const searchParams = req.nextUrl.searchParams;
+	const id = searchParams.get('id');
 
+	const browser = await puppeteer.launch({
+		args: chromium.args,
+		defaultViewport: chromium.defaultViewport,
+		executablePath: await chromium.executablePath(),
+		headless: chromium.headless,
+	});
+
+	const page = await browser.newPage();
+
+	try {
 		if (!id) {
 			return Response.json({ error: 'Id is required' }, { status: 400 });
 		}
@@ -66,11 +76,10 @@ export async function GET(req: NextRequest) {
 			attachments,
 		});
 	} catch (e) {
-		console.log(e);
 		if (e instanceof TimeoutError) {
 			return Response.json({ error: 'Solicitation not found for specified id' }, { status: 404 });
 		}
 
-		return Response.json({ error: 'Failed to scrape data' }, { status: 500 });
+		return Response.json({ error: e }, { status: 500 });
 	}
 }
