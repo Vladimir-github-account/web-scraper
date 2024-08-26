@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { scraper } from './services/scraper';
 import { HomePageWrapper } from '@/src/app/components/HomePageWrapper';
 import { useSearchContext } from '@/src/app/contexts/searchContext';
-import { Flex, Heading, Skeleton, SkeletonText, Stack, Text } from '@chakra-ui/react';
+import { Flex, Heading, Skeleton, SkeletonText, Stack, Text, Link } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 
 type IDataState = {
@@ -14,10 +14,11 @@ type IDataState = {
   summary: string;
   mainCategory: string;
   type: string;
+  attachments: string[];
 } | null;
 
 export default function Home() {
-  const { text } = useSearchContext();
+  const { text, setText } = useSearchContext();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<IDataState>(null);
@@ -29,6 +30,7 @@ export default function Home() {
 
     setLoading(true);
     setError(null);
+    setText('');
 
     try {
       const { data } = await scraper(text);
@@ -100,8 +102,18 @@ export default function Home() {
             <Text fontWeight='medium'>Main Category: <Text as='span' fontWeight='normal'>{data?.mainCategory}</Text></Text>
             <Text fontWeight='medium'>Solicitation Type: <Text as='span' fontWeight='normal'>{data?.type}</Text></Text>
             <Text fontWeight='medium'>Due / Close Date (EST): <Text as='span' fontWeight='normal'>{data?.closeDate}</Text></Text>
-            <Text fontWeight='medium'>Summary:</Text>
+            <Text fontWeight='medium'>Summary</Text>
             <Text maxW={1024}>{data?.summary}</Text>
+            <Text fontWeight='medium'>Attachments</Text>
+            {data?.attachments.map(attachment => (
+              <Link
+                target='_blank'
+                href={attachment}
+                key={attachment}
+              >
+                {attachment}
+              </Link>
+            ))}
           </Stack>
         }
       </Flex>

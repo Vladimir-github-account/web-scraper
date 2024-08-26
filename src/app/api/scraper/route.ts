@@ -48,6 +48,17 @@ export async function GET(req: NextRequest) {
 
 		const type = await typeTextSelector?.evaluate(el => el.textContent);
 
+		const attachments = await page.evaluate(() => {
+			const attachmentsLinks = document.querySelectorAll('#body_x_tabc_rfp_ext_prxrfp_ext_x_phcDoc_content .iv-download-file');
+			let results = [];
+
+			for (const link of attachmentsLinks) {
+				results = [...results, 'https://emma.maryland.gov' + link.getAttribute('href')];
+			}
+
+			return results;
+		}, { timeout: 60000 });
+
 		await browser.close();
 
 		return Response.json({
@@ -57,6 +68,7 @@ export async function GET(req: NextRequest) {
 			summary,
 			mainCategory,
 			type,
+			attachments,
 		});
 	} catch (e) {
 		if (e instanceof TimeoutError) {
