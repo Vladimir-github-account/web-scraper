@@ -66,6 +66,7 @@ export async function GET(req: NextRequest) {
 			attachments,
 		});
 	} catch (e) {
+		console.log(e);
 		if (e instanceof TimeoutError) {
 			return Response.json({ error: 'Solicitation not found for specified id' }, { status: 404 });
 		}
